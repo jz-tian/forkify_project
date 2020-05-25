@@ -1,0 +1,19 @@
+{
+  "name": "forkify",
+  "version": "1.0.0",
+  "description": "JavaScript project when learning",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jz-tian/forkify_project.git"
+  },
+  "author": "Jiazheng Tian",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jz-tian/forkify_project/issues"
+  },
+  "homepage": "https://github.com/jz-tian/forkify_project#readme"
+}
