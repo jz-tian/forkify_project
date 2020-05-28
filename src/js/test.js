@@ -1,3 +1,3 @@
 console.log('I\' m test.js');
 
-export default 'hahahahaha';
+export default 'oh lalala';
