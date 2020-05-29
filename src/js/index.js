@@ -1,46 +1,41 @@
-import axios from 'axios';
+import Search from './models/Search';
+import * as searchView from './views/searchView';
+import { elements } from './views/base';
 
-async function getRecipe(query){
-    try {
-        const res = await axios({
-            "method":"GET",
-            "url":"https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/search",
-            "headers":{
-            "content-type":"application/octet-stream",
-            "x-rapidapi-host":"spoonacular-recipe-food-nutrition-v1.p.rapidapi.com",
-            "x-rapidapi-key":"6254e2e442msh734c64054f6c642p1b8196jsn949ae6b44e00",
-            "useQueryString":true
-            },"params":{
-            "number":"100",
-            "query": query
-            }
-            });
-        console.log(res.data.results);
-    } catch(error){
-        alert(error);
+/* global state of the app
+* - search object
+* - current recipe object
+* - shopping list object
+* - liked recipes
+*/
+const state = {};
+
+elements.searchForm.addEventListener('submit', e =>{
+    e.preventDefault();
+    console.log('searching');
+    controlSearch();
+});
+
+const controlSearch = async () => {
+    // 1) get query from view
+    const query = searchView.getInput();
+    console.log(query);
+
+    if(query){
+        // 2) new search object and add it to state
+        state.search = new Search(query);
+
+        // 3) prepare UI for results
+        searchView.clearInput();
+        searchView.clearResults();
+
+        // 4) search for recipes
+        await state.search.getRecipe();
+
+        // 5) render results on UI
+        searchView.renderResults(state.search.result);
+        console.log(state.search.result);
+
     }
 }
 
-async function getWeather(query){
-    try {
-        const res = await axios({
-            "method":"GET",
-            "url":`https://dark-sky.p.rapidapi.com/${query[0]},${query[1]}`,
-            "headers":{
-            "content-type":"application/octet-stream",
-            "x-rapidapi-host":"dark-sky.p.rapidapi.com",
-            "x-rapidapi-key":"6254e2e442msh734c64054f6c642p1b8196jsn949ae6b44e00",
-            "useQueryString":true
-            },"params":{
-            "lang":"en",
-            "units":"auto"
-            }
-            });
-        
-        console.log(res.data.daily.data);
-    } catch (error) {
-        alert(error);
-    }
-}
-getWeather([39.909058, 116.389181]);
-getRecipe('rice');
