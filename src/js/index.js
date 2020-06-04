@@ -1,4 +1,5 @@
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
@@ -52,3 +53,7 @@ const controlSearch = async () => {
     }
 }
 
+//recipe controller
+const r = new Recipe(489101);
+r.getRecipe();
+console.log(r);
