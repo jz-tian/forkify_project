@@ -30,7 +30,7 @@ const renderRecipe = (recipe) => {
         </figure>
         <div class="results__data">
             <h4 class="results__name">${regularRecipeTitle(recipe.title)}</h4>
-            <p class="results__author">${recipe.sourceName}</p>
+            <p class="results__author">${recipe.sourceName === null ? 'UNKNOWN RESOURCE' : recipe.sourceName}</p>
         </div>
     </a>
     </li>`;

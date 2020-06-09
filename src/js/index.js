@@ -42,18 +42,45 @@ const controlSearch = async () => {
         searchView.clearResults();
         renderLoader(elements.searchRes);
 
-        // 4) search for recipes
-        await state.search.getRecipe();
+        try{
+            // 4) search for recipes
+            await state.search.getRecipe();
 
-        // 5) render results on UI
-        clearLoader();
-        searchView.renderResults(state.search.result);
-        console.log(state.search.result);
+            // 5) render results on UI
+            clearLoader();
+            searchView.renderResults(state.search.result);
+            console.log(state.search.result);
+        } catch{
+            alert('Error happened when searching for recipe list!');
+        }
+        
 
     }
 }
 
 //recipe controller
-const r = new Recipe(489101);
-r.getRecipe();
-console.log(r);
+const controlRecipe = async () => { 
+    const id = window.location.hash.replace('#',''); //得到当前URL里的hash部分，并去掉hash的#符号
+    console.log(id);
+
+    if(id){
+        //1. prepare UI for changes
+
+        //2. create a new recipe object
+        state.recipe = new Recipe(id);
+
+        try {
+            //3. get the recipe data
+            await state.recipe.getRecipe();
+
+            //4. render the recipe
+            console.log(state.recipe);
+        } catch {
+            alert('Error happened when loading recipes!');
+        }
+        
+    }
+
+}
+
+['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe)); //给window添加两个callback相同的eventlistener
