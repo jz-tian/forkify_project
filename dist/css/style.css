@@ -433,6 +433,12 @@ body {
     width: 90%;
     margin-bottom: 3rem;
     color: #968B87; }
+  .recipe__instruction-text {
+    font-size: 1.5rem;
+    text-align: left;
+    width: 90%;
+    margin-bottom: 3rem;
+    color: #968B87; }
   .recipe__by {
     font-weight: 700; }
 

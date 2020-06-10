@@ -1,6 +1,7 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeViews';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /* global state of the app
@@ -65,6 +66,11 @@ const controlRecipe = async () => {
 
     if(id){
         //1. prepare UI for changes
+        elements.recipeArea.innerHTML = '';
+        renderLoader(elements.recipeArea);
+
+        //highlight the selected search list item
+        if (state.search) searchView.hightlightSelector(id);
 
         //2. create a new recipe object
         state.recipe = new Recipe(id);
@@ -74,7 +80,8 @@ const controlRecipe = async () => {
             await state.recipe.getRecipe();
 
             //4. render the recipe
-            console.log(state.recipe);
+            clearLoader();
+            recipeView.renderRecipe(state.recipe);
         } catch {
             alert('Error happened when loading recipes!');
         }

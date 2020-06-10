@@ -17,7 +17,7 @@ export default class Recipe{
                 "useQueryString":true
                 }
                 });
-            console.log(res);
+            
             this.title = res.data.title;
             this.author = res.data.creditsText;
             this.img = res.data.image;
@@ -29,6 +29,7 @@ export default class Recipe{
             this.servingPeople = res.data.servings;
 
             this.parseIngredientUnits();
+       
 
         }catch{
             console.log(error)
@@ -45,11 +46,7 @@ export default class Recipe{
             let oldUnit = el.unit.toLowerCase();
             let newUnit;
             unitsLong.forEach((u, i) => {
-                
                 newUnit = oldUnit.replace(u, unitsShort[i]);
-                if(oldUnit !== newUnit){
-                    console.log(`replaced ${oldUnit} to ${newUnit}`);
-                }
             })
 
             //2. remove the parantheses
@@ -59,4 +56,5 @@ export default class Recipe{
         });
        
     }
+    
 }

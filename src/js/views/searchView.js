@@ -21,6 +21,13 @@ export const clearResults = () => {
     elements.searchResultPages.innerHTML = ' '; //清空已有的翻页按钮
 };
 
+export const hightlightSelector = id => {
+    const resultsArr = Array.from(document.querySelectorAll('.results__link'));
+    resultsArr.forEach(el => {el.classList.remove('result__link--active')});
+    
+    document.querySelector(`.results__link[href*="${id}"]`).classList.add('result__link--active'); //这是个css selector
+}
+
 const renderRecipe = (recipe) => {
     const markup = `
     <li>
