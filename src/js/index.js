@@ -1,5 +1,6 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import List from './models/List';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeViews';
 import { elements, renderLoader, clearLoader } from './views/base';
@@ -91,3 +92,18 @@ const controlRecipe = async () => {
 }
 
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe)); //给window添加两个callback相同的eventlistener
+
+//handling add or decrease serving people in the recipe
+elements.recipeArea.addEventListener('click', e => {
+    if(e.target.matches('.btn-decrease, .btn-decrease *')){ //如果点击的是带该class的按钮或者其任意子元素
+        if(state.recipe.servingPeople > 1){
+            state.recipe.updateServings('dec');
+            recipeView.updateServingAndIngredient(state.recipe);
+        }
+    } else if(e.target.matches('.btn-increase, .btn-increase *')){
+        state.recipe.updateServings('inc');
+        recipeView.updateServingAndIngredient(state.recipe);
+    }
+});
+
+window.list = new List();

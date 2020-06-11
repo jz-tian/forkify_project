@@ -26,35 +26,24 @@ export default class Recipe{
             this.instruction = res.data.instructions;
             this.summary = res.data.summary;
             this.cookingTime = res.data.readyInMinutes;
-            this.servingPeople = res.data.servings;
-
-            this.parseIngredientUnits();
-       
+            this.servingPeople = res.data.servings;       
 
         }catch{
             console.log(error)
         }
     }
 
-    parseIngredientUnits(){
-        const unitsLong = ['tablespoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds'];
-        const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound'];
-        const units = [...unitsShort, 'kg', 'g'];
+    updateServings(type){
+        const newServings = type ===  'dec' ? this.servingPeople - 1 : this.servingPeople + 1;
 
-        this.ingredients.forEach(el => {
-            //1. normalize the units
-            let oldUnit = el.unit.toLowerCase();
-            let newUnit;
-            unitsLong.forEach((u, i) => {
-                newUnit = oldUnit.replace(u, unitsShort[i]);
-            })
-
-            //2. remove the parantheses
-            newUnit = newUnit.replace(/ *\([^)]*\) */g, " "); //这是正则表达式
-
-            el.unit = newUnit;
+        this.ingredients.forEach(element => {
+            element.measures.metric.amount *= (newServings/this.servingPeople);
+            element.measures.metric.amount = element.measures.metric.amount.toFixed(2);
         });
-       
+
+        this.servingPeople = newServings;
     }
+
+
     
 }
