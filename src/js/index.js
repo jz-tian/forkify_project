@@ -1,8 +1,10 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Like from './models/Like';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeViews';
+import * as listView from './views/listView';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /* global state of the app
@@ -30,6 +32,7 @@ elements.searchResultPages.addEventListener('click', e => {
     }
 });
 
+//search controller
 const controlSearch = async () => {
     // 1) get query from view
     const query = searchView.getInput();
@@ -86,14 +89,48 @@ const controlRecipe = async () => {
         } catch {
             alert('Error happened when loading recipes!');
         }
-        
+    }
+}
+
+//adding shopping list
+const controlList = () => {
+    if(!state.list){
+        state.list = new List();
+    }
+    state.recipe.ingredients.forEach(el => {
+        const item = state.list.addItem(el.measures.metric.amount, el.measures.metric.unitShort, el.name); //这个方法写的时候特意让他把新加的item return回来
+        listView.renderItem(item);
+    })
+}
+
+const controlLike = () => {
+    if(!state.likes){
+        state.likes = new Like();
     }
 
+    const currentID = state.recipe.id;
+    if(!state.likes.isLiked(currentID)){
+        //user hasn't liked the current recipe
+        //Add like to the state
+        const newLike = state.likes.addLike(currentID, state.recipe.title, state.recipe.author, state.recipe.img);
+        //toggle the like button
+
+        //Add like to the UI list
+        console.log(state.likes);
+    } else {
+        //user has already liked the current recipe
+        //Remove like to the state
+        state.likes.deleteLike(currentID);
+        //toggle the like button
+
+        //Remove like to the UI list
+        console.log(state.likes);
+    }
 }
 
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe)); //给window添加两个callback相同的eventlistener
 
-//handling add or decrease serving people in the recipe
+//handling add or decrease serving people in the recipe。 这是另一种event delegation，这样可以在一片区域给一堆元素加不同的event listener，基于点的是哪里
 elements.recipeArea.addEventListener('click', e => {
     if(e.target.matches('.btn-decrease, .btn-decrease *')){ //如果点击的是带该class的按钮或者其任意子元素
         if(state.recipe.servingPeople > 1){
@@ -103,7 +140,25 @@ elements.recipeArea.addEventListener('click', e => {
     } else if(e.target.matches('.btn-increase, .btn-increase *')){
         state.recipe.updateServings('inc');
         recipeView.updateServingAndIngredient(state.recipe);
+    } else if(e.target.matches('.recipe__btn--add, .recipe__btn--add *')){
+        controlList();
+    } else if(e.target.matches('.recipe__love, .recipe__love *')){
+        controlLike(); //这是加收藏的button
     }
 });
 
-window.list = new List();
+//handles delete and update the shopping list
+elements.shoppingList.addEventListener('click', el => {
+    const id = el.target.closest('.shopping__item').dataset.itemid;
+
+    if(el.target.matches('.shopping__delete, .shopping__delete *')){
+        //delete state
+        state.list.deleteItem(id);
+
+        //delete user interface
+        listView.deleteItem(id);
+    } else if(e.target.matches('.shopping__count-value')){
+        const val = parseFloat(e.target.value, 10);
+        state.list.updateCount(id, val);
+    };
+});
