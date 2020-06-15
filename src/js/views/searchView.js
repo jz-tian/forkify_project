@@ -25,7 +25,7 @@ export const hightlightSelector = id => {
     const resultsArr = Array.from(document.querySelectorAll('.results__link'));
     resultsArr.forEach(el => {el.classList.remove('result__link--active')});
     
-    document.querySelector(`.results__link[href*="${id}"]`).classList.add('result__link--active'); //这是个css selector
+   // document.querySelector(`.results__link[href*="${id}"]`).classList.add('result__link--active'); //这是个css selector
 }
 
 const renderRecipe = (recipe) => {
@@ -44,7 +44,7 @@ const renderRecipe = (recipe) => {
     elements.searchResultList.insertAdjacentHTML('beforeend', markup);
 };
 
-const regularRecipeTitle = (title, limit = 17) => {  //limitted length of the recipe title that                                                         will be displayed
+export const regularRecipeTitle = (title, limit = 17) => {  //limitted length of the recipe title that                                                         will be displayed
     const newTitle = [];
     if(title.length > limit){
         title.split(' ').reduce((acc, cur) =>{

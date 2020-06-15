@@ -5,6 +5,7 @@ import Like from './models/Like';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeViews';
 import * as listView from './views/listView';
+import * as likeView from './views/likeViews';
 import { elements, renderLoader, clearLoader } from './views/base';
 
 /* global state of the app
@@ -15,9 +16,23 @@ import { elements, renderLoader, clearLoader } from './views/base';
 */
 const state = {};
 
+//restore the liked recipes when page reloads
+window.addEventListener('load', () => {
+    state.likes = new Like();
+
+    //从浏览器储存里把数据恢复
+    state.likes.getData();
+
+    likeView.toggleLikeMenu(state.likes.getNumLikes());
+
+    //render已有的likes
+    state.likes.likes.forEach(el => {
+        likeView.renderLike(el);
+    });
+})
+
 elements.searchForm.addEventListener('submit', e =>{
     e.preventDefault();
-    console.log('searching');
     controlSearch();
 });
 
@@ -36,7 +51,6 @@ elements.searchResultPages.addEventListener('click', e => {
 const controlSearch = async () => {
     // 1) get query from view
     const query = searchView.getInput();
-    console.log(query);
 
     if(query){
         // 2) new search object and add it to state
@@ -54,7 +68,6 @@ const controlSearch = async () => {
             // 5) render results on UI
             clearLoader();
             searchView.renderResults(state.search.result);
-            console.log(state.search.result);
         } catch{
             alert('Error happened when searching for recipe list!');
         }
@@ -85,7 +98,7 @@ const controlRecipe = async () => {
 
             //4. render the recipe
             clearLoader();
-            recipeView.renderRecipe(state.recipe);
+            recipeView.renderRecipe(state.recipe, state.likes.isLiked(id));
         } catch {
             alert('Error happened when loading recipes!');
         }
@@ -114,18 +127,22 @@ const controlLike = () => {
         //Add like to the state
         const newLike = state.likes.addLike(currentID, state.recipe.title, state.recipe.author, state.recipe.img);
         //toggle the like button
+        likeView.toggleLikeBut(true);
 
         //Add like to the UI list
-        console.log(state.likes);
+        likeView.renderLike(newLike);
     } else {
         //user has already liked the current recipe
         //Remove like to the state
         state.likes.deleteLike(currentID);
+        
         //toggle the like button
+        likeView.toggleLikeBut(false);
 
         //Remove like to the UI list
-        console.log(state.likes);
+        likeView.deleteLike(currentID);
     }
+    likeView.toggleLikeMenu(state.likes.getNumLikes());
 }
 
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe)); //给window添加两个callback相同的eventlistener
