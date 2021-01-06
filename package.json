@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/jz-tian/forkify_project#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "jquery": "^3.5.1",
     "uniqid": "^5.2.0"
   },
